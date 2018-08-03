@@ -2,19 +2,26 @@ const { fetch, formatDate } = require('./util');
 
 function booking(date) {
   // 预订席位数量
-  const COUNT = 3;
+  const COUNT = 2;
 
   // 预订的时间段
-  const HOUR = 13;
+  const HOUR = 10;
 
   const promises = [];
   for (let i = 0; i < COUNT; i++) {
-    promises.push(fetch(`reserve?babyType=1&date=${date}&hour=${HOUR}&minute=00&remark=&storeId=1210&teacher=2881`));
+    promises.push(new Promise(resolve => {
+      setTimeout(() => {
+        fetch(`reserve?babyType=1&date=${date}&hour=${HOUR}&minute=00&remark=&storeId=1210&teacher=2881`).then((data) => {
+          resolve(data);
+        });
+      }, i * 1000);
+    }));
   }
 
   console.log(`\n当前时间：${new Date()}`);
   console.log(`> 正在预订 ${date} 的席位...`);
   Promise.all(promises).then((res) => {
+    // console.log('--res:', res);
     const successResults = res.filter(item => item.data.result === '0');
     if (successResults.length === COUNT) {
       console.log('  预订成功');
@@ -43,6 +50,6 @@ const bookDate = new Date(Date.now() + 1000 * 3600 * 24 * 8); // 能预订8天�
 const weekIndex = bookDate.getDay(); // 0（周日） 到 6（周六）
 
 // 预订每周日、三的席位
-if ([0, 3].indexOf(weekIndex) > -1) {
+// if ([0, 3].indexOf(weekIndex) > -1) {
   booking(formatDate(bookDate));
-}
+// }
