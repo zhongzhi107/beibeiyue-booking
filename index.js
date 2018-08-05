@@ -50,6 +50,6 @@ const bookDate = new Date(Date.now() + 1000 * 3600 * 24 * 8); // 能预订8天�
 const weekIndex = bookDate.getDay(); // 0（周日） 到 6（周六）
 
 // 预订每周日、三的席位
-// if ([0, 3].indexOf(weekIndex) > -1) {
+if ([0, 3].indexOf(weekIndex) > -1) {
   booking(formatDate(bookDate));
-// }
+}
